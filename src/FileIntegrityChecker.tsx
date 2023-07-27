@@ -22,10 +22,18 @@ const FileIntegrityChecker: React.FC = () => {
 
     const calculateFileHash = async (file: File) => {
         setCalculatingHash(true);
-        const hashBuffer = await file.arrayBuffer();
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
-        setFileHash(hashHex);
+        try {
+            const buffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+            setFileHash(hashHex);
+            setIntegrityStatus(null); // Clear the previous integrity status
+        } catch (error) {
+            console.error("Error calculating file hash:", error);
+            setFileHash("");
+            setIntegrityStatus("Error calculating file hash");
+        }
         setCalculatingHash(false);
     };
 
@@ -62,7 +70,13 @@ const FileIntegrityChecker: React.FC = () => {
                 >
                     Check Integrity
                 </button>
-                {integrityStatus && <p>{integrityStatus}</p>}
+                {integrityStatus && (
+                    <div>
+                        <p>{integrityStatus}</p>
+                        <p>Inputted Hash: {knownHash}</p>
+                        <p>Calculated Hash: {fileHash}</p>
+                    </div>
+                )}
             </div>
         </div>
     );
