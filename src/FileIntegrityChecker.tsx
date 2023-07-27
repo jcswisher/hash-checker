@@ -9,7 +9,7 @@ const FileIntegrityChecker: React.FC = () => {
     const [calculatingHash, setCalculatingHash] = useState(false);
 
     const handleKnownHashChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setKnownHash(event.target.value);
+        setKnownHash(event.target.value.toLowerCase());
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
