@@ -32,9 +32,14 @@ button {
     color: #fff;
     border: none;
     border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
 button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+button.clicked {
+    background-color: #00cc8a;
 }

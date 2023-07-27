@@ -5,6 +5,8 @@ const FileIntegrityChecker: React.FC = () => {
     const [knownHash, setKnownHash] = useState("");
     const [fileHash, setFileHash] = useState("");
     const [file, setFile] = useState<File | null>(null);
+    const [integrityStatus, setIntegrityStatus] = useState<string | null>(null);
+    const [calculatingHash, setCalculatingHash] = useState(false);
 
     const handleKnownHashChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setKnownHash(event.target.value);
@@ -19,18 +21,20 @@ const FileIntegrityChecker: React.FC = () => {
     };
 
     const calculateFileHash = async (file: File) => {
+        setCalculatingHash(true);
         const hashBuffer = await file.arrayBuffer();
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
         setFileHash(hashHex);
+        setCalculatingHash(false);
     };
 
     const handleCheckIntegrity = () => {
         // Compare the knownHash with fileHash here
         if (knownHash === fileHash) {
-            alert("File integrity check passed!");
+            setIntegrityStatus("File integrity check passed!");
         } else {
-            alert("File integrity check failed!");
+            setIntegrityStatus("File integrity check failed!");
         }
     };
 
@@ -52,10 +56,13 @@ const FileIntegrityChecker: React.FC = () => {
                 <input type="file" id="file" onChange={handleFileChange} />
             </div>
             <div className="result-box">
-                <p>File Hash: {fileHash}</p>
-                <button onClick={handleCheckIntegrity} disabled={!file || !knownHash}>
+                <button
+                    onClick={handleCheckIntegrity}
+                    disabled={!file || !knownHash || calculatingHash}
+                >
                     Check Integrity
                 </button>
+                {integrityStatus && <p>{integrityStatus}</p>}
             </div>
         </div>
     );
