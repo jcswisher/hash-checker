@@ -1,9 +1,9 @@
 [package]
-name = "hash-checker"
-version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
+name = "File-Integrity-Checker"
+version = "0.1.0"
+description = "A Tauri + React app that will check the integrity of downloaded files"
+authors = ["Jeremiah Swisher"]
+license = "MIT"
 repository = ""
 edition = "2021"
 
